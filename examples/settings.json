@@ -1,0 +1,15 @@
+{
+  "comment": [
+    "THIS IS THE SETTINGS FILE FOR THE APPLICATION. It is realized in the JSON format.",
+    "you can read values with nconf like that: localUsers = nconf.get(\"accesscontrol:localUsers\")",
+    "!!!rename into 'settings.json' and store it in the project root directory.", 
+    " Make sure it is a valid json: http://jsonlint.com !!!"
+  ],
+  "webserver": {
+    "port": "3000"
+  },
+  "liveReload": {
+  	"port" : 35729
+  }
+}
+
