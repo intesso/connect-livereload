@@ -13,14 +13,18 @@ module.exports = function liveReload(port) {
     return snippet;
   };
 
+  function snippetExists(body) {
+    return (~body.lastIndexOf("/livereload.js?snipver=1"));
+  }
+
   return function(req, res, next) {
     var path = require('path');
     var url = require('url');
 
     var writeHead = res.writeHead;
     var end = res.end;
-    var filepath = url.parse(req.url).pathname;
 
+    var filepath = url.parse(req.url).pathname;
     filepath = filepath.slice(-1) === '/' ? filepath + 'index.html' : filepath;
 
     if (path.extname(filepath) !== '.html' && res.send === undefined) {
@@ -38,13 +42,12 @@ module.exports = function liveReload(port) {
     var inject = res.write = function(string, encoding) {
       if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
-
-        res.push(body.replace(/<\/body>/, function(w) {
-
-          return getSnippet() + w;
-        }));
+        if (!snippetExists(body)) {
+          res.push(body.replace(/<\/body>/, function(w) {
+            return getSnippet() + w;
+          }));
+        }
       }
-
       return true;
     };
 
@@ -57,12 +60,10 @@ module.exports = function liveReload(port) {
 
       // Restore writeHead
       res.writeHead = writeHead;
-
       if (res.data !== undefined) {
         if (!res._header) {
           res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
         }
-
         end.call(res, res.data, encoding);
       }
     };
