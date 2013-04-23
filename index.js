@@ -17,21 +17,18 @@ module.exports = function liveReload(port) {
     return (~body.lastIndexOf("/livereload.js?snipver=1"));
   }
 
-  return function(req, res, next) {
-    var path = require('path');
-    var url = require('url');
+  function acceptsHtmlExplicit(req) {
+    var accept = req.headers["accept"];
+    if (!accept) return false;
+    return~accept.indexOf("html");
+  }
 
+  return function(req, res, next) {
     var writeHead = res.writeHead;
     var end = res.end;
 
-    var filepath = url.parse(req.url).pathname;
-    filepath = filepath.slice(-1) === '/' ? filepath + 'index.html' : filepath;
-
-    if (path.extname(filepath) !== '.html' && res.send === undefined) {
+    if (!acceptsHtmlExplicit(req) || (res.send === undefined)) {
       return next();
-    }
-    if (req.accepts && !req.accepts('html')) {
-      next();
     }
 
     res.push = function(chunk) {
@@ -48,7 +45,7 @@ module.exports = function liveReload(port) {
           }));
         }
       }
-      return true;
+      return false;
     };
 
     // Prevent headers from being finalized
