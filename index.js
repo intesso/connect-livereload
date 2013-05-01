@@ -1,5 +1,7 @@
-module.exports = function liveReload(port) {
-  port = port || 35729;
+module.exports = function liveReload(opt) {
+  var opt = opt || {};
+  var port = opt.port || 35729;
+  var excludeList = opt.excludeList || [".woff"];
 
   function getSnippet() {
     /*jshint quotmark:false */
@@ -23,11 +25,24 @@ module.exports = function liveReload(port) {
     return~accept.indexOf("html");
   }
 
+  function isExcluded(req) {
+    var url = req.url;
+    var excluded = false;
+    if (!url) return true;
+    excludeList.forEach(function(exclude) {
+      if (~url.indexOf(exclude)) {
+        excluded = true;
+      } 
+    });
+    return excluded;
+  }
+
   return function(req, res, next) {
+    console.log("liveReload website req", req.url);
     var writeHead = res.writeHead;
     var end = res.end;
 
-    if (!acceptsHtmlExplicit(req) || (res.send === undefined)) {
+    if (!acceptsHtmlExplicit(req) || isExcluded(req) || (res.send === undefined)) {
       return next();
     }
 

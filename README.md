@@ -16,8 +16,13 @@ this middleware can be used with a LiveReload server e.g. [grunt-reload](https:/
 
 In your connect or express application add this after the static and before the dynamic routes:
 ```javascript
-  var port = 35729;
-  app.use(require('connect-livereload')(port));
+  var liveReloadPort = 35729;
+  var excludeList = ['.woff', '.flv'];
+  
+  app.use(require('connect-livereload')({
+    port: liveReloadPort,
+    excludeList: excludeList
+  }));
 ```
 
 please see the [examples](https://github.com/intesso/connect-livereload/tree/master/examples) for the app and Grunt configuration.
