@@ -16,8 +16,13 @@ app.use(express["static"](__dirname + "/public"));
 app.configure('development', function() {
   // live reload script
   var liveReloadPort = settings.liveReload.port || 35729;
-  app.use(require('connect-livereload')(liveReloadPort));
-})
+  var excludeList = ['.woff', '.flv'];
+  
+  app.use(require('connect-livereload')({
+    port: liveReloadPort,
+    excludeList: excludeList
+  }));
+});
 
 // load the routes
 app.use(app.router);
