@@ -38,7 +38,6 @@ module.exports = function liveReload(opt) {
   }
 
   return function(req, res, next) {
-    console.log("liveReload website req", req.url);
     var writeHead = res.writeHead;
     var end = res.end;
 
