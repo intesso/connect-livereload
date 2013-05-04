@@ -41,7 +41,7 @@ module.exports = function liveReload(opt) {
     var writeHead = res.writeHead;
     var end = res.end;
 
-    if (!acceptsHtmlExplicit(req) || isExcluded(req) || (res.send === undefined)) {
+    if (!acceptsHtmlExplicit(req) || isExcluded(req)) {
       return next();
     }
 
