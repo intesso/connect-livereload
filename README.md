@@ -29,8 +29,10 @@ In your connect or express application add this after the static and before the 
 
 please see the [examples](https://github.com/intesso/connect-livereload/tree/master/examples) for the app and Grunt configuration.
 
-	note: if you add this middleware before the static middleware, it will lead to problems. 
-	If you can't avoid that for some reason, you have to add all of the static file extensions to the `excludeList: ['.css', '.js', '.ico', '.png', 'ect...']`
+	
+###note 
+if you add this middleware before the static middleware, it will lead to problems. 
+If you can't avoid that for some reason, you have to add all of the static file extensions to the `excludeList: ['.css', '.js', '.ico', '.png', 'ect...']`
 
 alternative
 ===========
@@ -45,7 +47,9 @@ credits
 tests
 =====
 run the tests with 
-```mocha```
+```
+mocha
+```
 
 license
 =======
