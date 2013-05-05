@@ -4,6 +4,8 @@ connect middleware for adding the livereload script to the response.
 no browser plugin is needed.
 if you are happy with a browser plugin, then you don't need this middleware.
 
+[![Build Status](https://travis-ci.org/intesso/connect-livereload.png)](https://travis-ci.org/intesso/connect-livereload)
+
 install
 =======
 ```bash
