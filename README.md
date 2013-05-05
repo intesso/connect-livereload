@@ -27,6 +27,8 @@ In your connect or express application add this after the static and before the 
 
 please see the [examples](https://github.com/intesso/connect-livereload/tree/master/examples) for the app and Grunt configuration.
 
+	note: if you add this middleware before the static middleware, it will lead to problems. 
+	If you can't avoid that for some reason, you have to add all of the static file extensions to the `excludeList: ['.css', '.js', '.ico', '.png', 'ect...']`
 
 alternative
 ===========
@@ -38,6 +40,10 @@ credits
 * The middleware code is mainly extracted from: [grunt-contrib-livereload/util.js](https://github.com/gruntjs/grunt-contrib-livereload/blob/master/lib/utils.js)
 * [LiveReload Creator](http://livereload.com/)
 
+tests
+=====
+run the tests with 
+```mocha```
 
 license
 =======

@@ -9,9 +9,11 @@
       "email": "andi.neck@intesso.com"
     }
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
+    "express": "~3.2.2",
+    "supertest": "~0.6.0",
+    "mocha": "~1.9.0"
   },
   "keywords": [
     "connect",

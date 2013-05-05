@@ -1,5 +1,3 @@
-/* intesso template server
- */
 // set global variables
 var settings = require("./settings");
 

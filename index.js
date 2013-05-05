@@ -1,7 +1,7 @@
 module.exports = function liveReload(opt) {
   var opt = opt || {};
   var port = opt.port || 35729;
-  var excludeList = opt.excludeList || [".woff"];
+  var excludeList = opt.excludeList || [".woff", ".js", ".css", ".ico"];
 
   function getSnippet() {
     /*jshint quotmark:false */
@@ -22,7 +22,7 @@ module.exports = function liveReload(opt) {
   function acceptsHtmlExplicit(req) {
     var accept = req.headers["accept"];
     if (!accept) return false;
-    return~accept.indexOf("html");
+    return (~accept.indexOf("html"));
   }
 
   function isExcluded(req) {
@@ -32,7 +32,7 @@ module.exports = function liveReload(opt) {
     excludeList.forEach(function(exclude) {
       if (~url.indexOf(exclude)) {
         excluded = true;
-      } 
+      }
     });
     return excluded;
   }
