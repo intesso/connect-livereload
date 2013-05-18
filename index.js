@@ -75,8 +75,8 @@ module.exports = function liveReload(opt) {
         if (!res._header) {
           res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
         }
-        end.call(res, res.data, encoding);
       }
+      end.call(res,res.data,encoding); // finish the response
     };
 
     next();
