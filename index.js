@@ -51,7 +51,7 @@ module.exports = function liveReload(opt) {
 
     // Bypass write until end
     var inject = res.write = function(string, encoding) {
-      if (string !== undefined) {
+      if (string !== undefined) { 
         var body = string instanceof Buffer ? string.toString(encoding) : string;
         if (!snippetExists(body)) {
           res.push(body.replace(/<\/body>/, function(w) {
@@ -68,15 +68,15 @@ module.exports = function liveReload(opt) {
     // Write everything at the end
     res.end = function(string, encoding) {
       inject(string, encoding);
-
+  
       // Restore writeHead
       res.writeHead = writeHead;
       if (res.data !== undefined) {
         if (!res._header) {
           res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
         }
-        end.call(res, res.data, encoding);
       }
+      end.call(res,res.data,encoding); // finish the response
     };
 
     next();
