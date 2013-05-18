@@ -51,12 +51,7 @@ module.exports = function liveReload(opt) {
 
     // Bypass write until end
     var inject = res.write = function(string, encoding) {
-      if (string == undefined || string == 'undefined') {
-        res.push("");
-        return false;
-      }
-      
-      if (string !== undefined) { 
+      if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
         if (!snippetExists(body)) {
           res.push(body.replace(/<\/body>/, function(w) {
