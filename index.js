@@ -1,21 +1,28 @@
 module.exports = function liveReload(opt) {
   var opt = opt || {};
   var port = opt.port || 35729;
-  var excludeList = opt.excludeList || [".woff", ".js", ".css", ".ico"];
+  var excludeList = opt.excludeList || ['.woff', '.js', '.css', '.ico'];
 
   function getSnippet() {
     /*jshint quotmark:false */
     var snippet = [
-      "<!-- livereload script -->",
-      "<script type=\"text/javascript\">document.write('<script src=\"http://'",
-      " + (location.host || 'localhost').split(':')[0]",
-      " + ':" + port + "/livereload.js?snipver=1\" type=\"text/javascript\"><\\/script>')",
-      "</script>",
-      ""].join('\n');
+        "<!-- livereload script -->",
+        "<script type=\"text/javascript\">document.write('<script src=\"http://'",
+        " + (location.host || 'localhost').split(':')[0]",
+        " + ':" + port + "/livereload.js?snipver=1\" type=\"text/javascript\"><\\/script>')",
+        "</script>",
+        ""
+    ].join('\n');
     return snippet;
   };
 
+  function bodyExists(body) {
+    if (!body) return false;
+    return (~body.lastIndexOf("</body>"));
+  }
+
   function snippetExists(body) {
+    if (!body) return true;
     return (~body.lastIndexOf("/livereload.js?snipver=1"));
   }
 
@@ -39,6 +46,7 @@ module.exports = function liveReload(opt) {
 
   return function(req, res, next) {
     var writeHead = res.writeHead;
+    var write = res.write;
     var end = res.end;
 
     if (!acceptsHtmlExplicit(req) || isExcluded(req)) {
@@ -49,36 +57,30 @@ module.exports = function liveReload(opt) {
       res.data = (res.data || '') + chunk;
     };
 
-    // Bypass write until end
-    var inject = res.write = function(string, encoding) {
+    res.inject = res.write = function(string, encoding) {
+      res.write = write;
       if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
-        if (!snippetExists(body)) {
+        if ((bodyExists(body) || bodyExists(res.data)) && !snippetExists(body) && (!res.data || !snippetExists(res.data))) {
           res.push(body.replace(/<\/body>/, function(w) {
             return getSnippet() + w;
           }));
+          return true;
+        } else {
+          return res.write(string, encoding);
         }
       }
-      return false;
+      return true;
     };
 
-    // Prevent headers from being finalized
-    res.writeHead = function() {};
-
-    // Write everything at the end
     res.end = function(string, encoding) {
-      inject(string, encoding);
-
-      // Restore writeHead
       res.writeHead = writeHead;
-      if (res.data !== undefined) {
-        if (!res._header) {
-          res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
-        }
-      }
-      end.call(res,res.data,encoding); // finish the response
+      res.end = end;
+      var result = res.inject(string, encoding);
+      if (!result) return res.end(string, encoding);
+      if (res.data !== undefined && !res._header) res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
+      res.end(res.data, encoding);
     };
-
     next();
   };
 
