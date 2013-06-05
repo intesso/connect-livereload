@@ -44,7 +44,7 @@ module.exports = function liveReload(opt) {
     return excluded;
   }
 
-  return function(req, res, next) {
+  return function liveReload(req, res, next) {
     var writeHead = res.writeHead;
     var write = res.write;
     var end = res.end;

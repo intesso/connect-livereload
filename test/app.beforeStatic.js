@@ -124,7 +124,6 @@ describe('GET /write', function(){
       .set('Accept', 'text/html')
       .expect(200)
       .end(function(err, res){
-        console.log("write", res.text);
         assert(hasScript(res.text));
         if (err) return done(err);
         done()
@@ -140,7 +139,6 @@ describe('GET /writeStream', function(){
       .set('Accept', 'text/html')
       .expect(200)
       .end(function(err, res){
-        console.log("write", res.text);
         assert(hasScript(res.text));
         if (err) return done(err);
         done()
