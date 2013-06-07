@@ -17,7 +17,8 @@ use
 this middleware can be used with a LiveReload server e.g. [grunt-reload](https://github.com/webxl/grunt-reload) or [grunt-contrib-watch](https://github.com/gruntjs/grunt-contrib-watch).
 
 In your connect or express application add this after the static and before the dynamic routes.
-If you can't place it after the static routes, you can alo place it before. The `excludeList` gives you the possibility to exclude certain files or url's from being handled by `connect-livereload`.
+If you need liveReload on static html files, then place it before the static routes. 
+The `excludeList` gives you the possibility to exclude certain files or url's from being handled by `connect-livereload`.
 
 ```javascript
   var liveReloadPort = 35729;
