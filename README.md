@@ -14,9 +14,11 @@ npm install connect-livereload --save-dev
 
 use
 ===
-this middleware can be used with a LiveReload server e.g. [grunt-reload](https://github.com/webxl/grunt-reload).
+this middleware can be used with a LiveReload server e.g. [grunt-reload](https://github.com/webxl/grunt-reload) or [grunt-contrib-watch](https://github.com/gruntjs/grunt-contrib-watch).
 
-In your connect or express application add this after the static and before the dynamic routes:
+In your connect or express application add this after the static and before the dynamic routes.
+If you can't place it after the static routes, you can alo place it before. The `excludeList` gives you the possibility to exclude certain files or url's from being handled by `connect-livereload`.
+
 ```javascript
   var liveReloadPort = 35729;
   var excludeList = ['.woff', '.flv'];
@@ -29,10 +31,6 @@ In your connect or express application add this after the static and before the 
 
 please see the [examples](https://github.com/intesso/connect-livereload/tree/master/examples) for the app and Grunt configuration.
 
-	
-###note 
-if you add this middleware before the static middleware, it will lead to problems. 
-If you can't avoid that for some reason, you have to add all of the static file extensions to the `excludeList: ['.css', '.js', '.ico', '.png', 'ect...']`
 
 alternative
 ===========
