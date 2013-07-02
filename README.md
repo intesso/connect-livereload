@@ -14,12 +14,15 @@ npm install connect-livereload --save-dev
 
 use
 ===
+note: if you use this middleware, you should make sure to switch off the Browser LiveReload Extension if you have it installed.
+
 this middleware can be used with a LiveReload server e.g. [grunt-reload](https://github.com/webxl/grunt-reload) or [grunt-contrib-watch](https://github.com/gruntjs/grunt-contrib-watch).
 
 In your connect or express application add this after the static and before the dynamic routes.
 If you need liveReload on static html files, then place it before the static routes.
 The `excludeList` gives you the possibility to exclude certain files or url's from being handled by `connect-livereload`.
 
+## connect/express example
 ```javascript
   var liveReloadPort = 35729;
   var excludeList = ['.woff', '.flv'];
@@ -32,16 +35,7 @@ The `excludeList` gives you the possibility to exclude certain files or url's fr
 
 please see the [examples](https://github.com/intesso/connect-livereload/tree/master/examples) for the app and Grunt configuration.
 
-grunt
-=====
-
-For use as middleware in grunt simply add the following to the **top** of your array of middleware.
-
-```javascript
-  require('connect-livereload')(),
-```
-
-You can pass in options to this call if you do not want the defaults.
+## grunt example
 
 The following example is from an actual Gruntfile that uses [grunt-contrib-connect] (https://github.com/gruntjs/grunt-contrib-connect)
 
@@ -65,6 +59,12 @@ connect: {
   }
 }
 ```
+For use as middleware in grunt simply add the following to the **top** of your array of middleware.
+
+```javascript
+  require('connect-livereload')(),
+```
+You can pass in options to this call if you do not want the defaults.
 
 `dev` is simply the name of the server being used with the task `grunt connect:dev`. The other items in the `middleware` array are all functions that either are of the form `function (req, res, next)` like `checkForDownload` or return that like `mountFolder(connect, 'something')`.
 
