@@ -43,6 +43,31 @@ For use as middleware in grunt simply add the following to the **top** of your a
 
 You can pass in options to this call if you do not want the defaults.
 
+The following example is from an actual Gruntfile that uses [grunt-contrib-connect] (https://github.com/gruntjs/grunt-contrib-connect)
+
+```javascript
+connect: {
+  options: {
+    port: 3000,
+    hostname: 'localhost'
+  },
+  dev: {
+    options: {
+      middleware: function (connect) {
+        return [
+          require('connect-livereload')(), // <--- here
+          checkForDownload,
+          mountFolder(connect, '.tmp'),
+          mountFolder(connect, 'app')
+        ];
+      }
+    }
+  }
+}
+```
+
+`dev` is simply the name of the server being used with the task `grunt connect:dev`. The other items in the `middleware` array are all functions that either are of the form `function (req, res, next)` like `checkForDownload` or return that like `mountFolder(connect, 'something')`.
+
 alternative
 ===========
 An alternative would be to install the [LiveReload browser plugin](https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei).
