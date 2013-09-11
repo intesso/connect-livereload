@@ -35,6 +35,7 @@ module.exports = function livereload(opt) {
   }
 
   function _html(str) {
+    if (!str) return false;
     return /<\!*[a-z][\s\S]*>/i.test(str);
   }
 
@@ -60,7 +61,7 @@ module.exports = function livereload(opt) {
         return true;
       }
       return false;
-    })
+    });
     return _body;
   }
 
@@ -99,10 +100,10 @@ module.exports = function livereload(opt) {
     res.inject = res.write = function(string, encoding) {
       if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
-        if (exists(body) && !snip(body)) {
+        if (exists(body) || exists(res.data) && !snip(body) && (!res.data || !snip(res.data))) {
           res.push(snap(body));
           return true;
-        } else if (html(body) || (res.data && html(res.data))) {
+        } else if (html(body) || html(res.data)) {
           res.push(body);
           return true;
         } else {
@@ -112,8 +113,11 @@ module.exports = function livereload(opt) {
       return true;
     };
 
+    res.writeHead = function() {};
+
     res.end = function(string, encoding) {
       res.writeHead = writeHead;
+      res.write = write;
       res.end = end;
       var result = res.inject(string, encoding);
       if (!result) return res.end(string, encoding);

@@ -1,6 +1,6 @@
 var express = require("express");
 var app = module.exports = express();
-
+var fs = require('fs');
 
 // load liveReload script only in development mode
 app.configure('development', function() {
@@ -11,14 +11,26 @@ app.configure('development', function() {
   }));
 });
 
+// load the routes
+app.use(app.router);
+
 // NOTE: static content should be served before LiveReload. This is for test purposes only.
 app.use(express["static"](__dirname + "/public"));
 
-// load the routes
-app.use(app.router);
+
 app.get("/index.html", function(req, res) {
   var html = '<html><head></head><body><p>index.html test </p></body></html>';
   res.send(html);
+});
+
+app.get("/index.html", function(req, res) {
+  var html = '<html><head></head><body><p>index.html test </p></body></html>';
+  res.send(html);
+});
+
+app.get("/large.html", function(req, res) {
+  var stream = fs.createReadStream('./public/large-file.html');
+  stream.pipe(res);
 });
 
 // start the server

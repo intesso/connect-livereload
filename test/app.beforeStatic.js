@@ -31,8 +31,9 @@ app.get("/index.html", function(req, res) {
 
 app.get("/writeStream", function(req, res) {
   res.write('<html><head></head>');
-  //res.write('<body><p>write test </p></body></html>'); -> does not work!!! </body> has to be written wit res.end or res.send
-  res.end('<body><p>write test </p></body></html>');
+  res.write('<body><p>write test ');
+  res.write('</p></body>');
+  res.end('</html>');
 });
 
 app.get("/write", function(req, res) {
@@ -57,13 +58,13 @@ function hasScript(html) {
   return (~html.indexOf('livereload.js?snipver=1'));
 }
 
-describe('GET /default-test', function(){
-  it('respond with inserted script', function(done){
+describe('GET /default-test', function() {
+  it('respond with inserted script', function(done) {
     request(app)
       .get('/default-test')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(hasScript(res.text));
         assert(~res.text.indexOf(':35730/livereload.js'));
         if (err) return done(err);
@@ -72,13 +73,13 @@ describe('GET /default-test', function(){
   })
 })
 
-describe('GET /index.html', function(){
-  it('respond with inserted script', function(done){
+describe('GET /index.html', function() {
+  it('respond with inserted script', function(done) {
     request(app)
       .get('/index.html')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(hasScript(res.text));
         assert(~res.text.indexOf(':35730/livereload.js'));
         if (err) return done(err);
@@ -87,27 +88,27 @@ describe('GET /index.html', function(){
   })
 })
 
-describe('GET /large-file', function(){
-  it('respond with inserted script', function(done){
+describe('GET /large-file', function() {
+  it('respond with inserted script', function(done) {
     request(app)
       .get('/large-file.html')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
-        assert(~res.text.indexOf(':35730/livereload.js'));
-        if (err) return done(err);
-        done()
-      });
+    .end(function(err, res) {
+      assert(~res.text.indexOf(':35730/livereload.js'));
+      if (err) return done(err);
+      done();
+    });
   })
 })
 
-describe('GET /client.js', function(){
-  it('respond without script', function(done){
+describe('GET /client.js', function() {
+  it('respond without script', function(done) {
     request(app)
       .get('/client.js')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(!hasScript(res.text));
         if (err) return done(err);
         done()
@@ -116,13 +117,13 @@ describe('GET /client.js', function(){
 })
 
 
-describe('GET /static.html', function(){
-  it('respond with script', function(done){
+describe('GET /static.html', function() {
+  it('respond with script', function(done) {
     request(app)
       .get('/static.html')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(hasScript(res.text));
         if (err) return done(err);
         done()
@@ -131,12 +132,12 @@ describe('GET /static.html', function(){
 })
 
 
-describe('GET /favicon.ico', function(){
-  it('respond with script', function(done){
+describe('GET /favicon.ico', function() {
+  it('respond with script', function(done) {
     request(app)
       .get('/favicon.ico')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(!hasScript(res.text));
         if (err) return done(err);
         done()
@@ -144,12 +145,12 @@ describe('GET /favicon.ico', function(){
   })
 })
 
-describe('GET /font.ttf', function(){
-  it('respond with script', function(done){
+describe('GET /font.ttf', function() {
+  it('respond with script', function(done) {
     request(app)
       .get('/font.ttf')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(!hasScript(res.text));
         if (err) return done(err);
         done()
@@ -157,13 +158,13 @@ describe('GET /font.ttf', function(){
   })
 })
 
-describe('GET /static.html', function(){
-  it('respond with script', function(done){
+describe('GET /static.html', function() {
+  it('respond with script', function(done) {
     request(app)
       .get('/static.html')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(hasScript(res.text));
         if (err) return done(err);
         done()
@@ -171,13 +172,13 @@ describe('GET /static.html', function(){
   })
 })
 
-describe('GET /write', function(){
-  it('respond with script', function(done){
+describe('GET /write', function() {
+  it('respond with script', function(done) {
     request(app)
       .get('/write')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(hasScript(res.text));
         if (err) return done(err);
         done()
@@ -186,17 +187,16 @@ describe('GET /write', function(){
 })
 
 
-describe('GET /writeStream', function(){
-  it('respond with script', function(done){
+describe('GET /writeStream', function() {
+  it('respond with script', function(done) {
     request(app)
       .get('/writeStream')
       .set('Accept', 'text/html')
       .expect(200)
-      .end(function(err, res){
+      .end(function(err, res) {
         assert(hasScript(res.text));
         if (err) return done(err);
         done()
       });
   })
 })
-
