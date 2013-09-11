@@ -1,7 +1,3 @@
-var settings = require("./settings");
-var port = settings.webserver.port || 3000;
-var liveReloadPort = settings.liveReload.port || 35729;
-
 module.exports = function(grunt) {
   grunt.initConfig({
     watch: {
@@ -16,11 +12,11 @@ module.exports = function(grunt) {
       }
     },
     reload: {
-      port: liveReloadPort,
+      port: 35729,
       liveReload: {},
       proxy: {
         host: "localhost",
-        port: port
+        port: 8080
       }
     }
   });

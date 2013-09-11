@@ -1,4 +1,5 @@
 module.exports = function livereload(opt) {
+  // options
   var opt = opt || {};
   var ignore = opt.ignore || opt.excludeList || ['.woff', '.js', '.css', '.ico'];
   var html = opt.html || _html;
@@ -13,9 +14,10 @@ module.exports = function livereload(opt) {
     fn: append
   }];
   var port = opt.port || 35729;
-  var src = opt.src || "' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':" + port + "/livereload.js?snipver=1'";
+  var src = opt.src || "' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':" + port + "/livereload.js?snipver=1";
   var snippet = "\n<script type=\"text/javascript\">document.write('<script src=\"" + src + "\" type=\"text/javascript\"><\\/script>')</script>\n";
 
+  // helper functions
   var regex = (function() {
     var matches = rules.map(function(item) {
       return item.match.source;
@@ -80,6 +82,7 @@ module.exports = function livereload(opt) {
     return ignored;
   }
 
+  // middleware
   return function livereload(req, res, next) {
     var writeHead = res.writeHead;
     var write = res.write;

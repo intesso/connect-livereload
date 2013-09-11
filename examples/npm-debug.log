@@ -1,0 +1,22 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'start' ]
+2 info using npm@1.1.48
+3 info using node@v0.8.6
+4 verbose config file /Users/andineck/.npmrc
+5 verbose config file /usr/local/etc/npmrc
+6 verbose config file /usr/local/lib/node_modules/npm/npmrc
+7 verbose read json /Users/andineck/Development/github/connect-livereload/examples/package.json
+8 error Error: ENOENT, open '/Users/andineck/Development/github/connect-livereload/examples/package.json'
+9 error If you need help, you may report this log at:
+9 error     <http://github.com/isaacs/npm/issues>
+9 error or email it to:
+9 error     <npm-@googlegroups.com>
+10 error System Darwin 12.4.0
+11 error command "/usr/local/bin/node" "/usr/local/bin/npm" "start"
+12 error cwd /Users/andineck/Development/github/connect-livereload/examples
+13 error node -v v0.8.6
+14 error npm -v 1.1.48
+15 error path /Users/andineck/Development/github/connect-livereload/examples/package.json
+16 error code ENOENT
+17 error errno 34
+18 verbose exit [ 34, true ]

@@ -78,11 +78,8 @@ These are the available options with the following defaults:
   // port where the script is loaded
   port: 35729,
 
-  // location where the script is provided (not by connect-livereload)
-  src: "' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':" + port + "/livereload.js?snipver=1'", 
-  // so if you can overwrite this with a plain string if you use some sort of proxy. e.g.: 
-  src: "https://myserver.dev/livereload.js?snipver=1"
-
+  // location where the script is provided (not by connect-livereload). Change this e.g. when serving livereload with a proxy.
+  src: "http://localhost:35729/livereload.js?snipver=1", 
 ```
 
 please see the [examples](https://github.com/intesso/connect-livereload/tree/master/examples) for the app and Grunt configuration.
