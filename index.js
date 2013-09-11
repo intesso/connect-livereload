@@ -1,55 +1,91 @@
-module.exports = function liveReload(opt) {
+module.exports = function livereload(opt) {
   var opt = opt || {};
+  var ignore = opt.ignore || opt.excludeList || ['.woff', '.js', '.css', '.ico'];
+  var html = opt.html || _html;
+  var rules = opt.rules || [{
+    match: /<\/body>/,
+    fn: prepend
+  }, {
+    match: /<\/html>/,
+    fn: prepend
+  }, {
+    match: /\<\!DOCTYPE.+\>/,
+    fn: append
+  }];
   var port = opt.port || 35729;
-  var excludeList = opt.excludeList || ['.woff', '.js', '.css', '.ico'];
+  var src = opt.src || "' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':" + port + "/livereload.js?snipver=1'";
+  var snippet = "\n<script type=\"text/javascript\">document.write('<script src=\"" + src + "\" type=\"text/javascript\"><\\/script>')</script>\n";
 
-  function getSnippet() {
-    /*jshint quotmark:false */
-    var snippet = [
-        "<!-- livereload script -->",
-        "<script type=\"text/javascript\">document.write('<script src=\"http://'",
-        " + (location.host || 'localhost').split(':')[0]",
-        " + ':" + port + "/livereload.js?snipver=1\" type=\"text/javascript\"><\\/script>')",
-        "</script>",
-        ""
-    ].join('\n');
-    return snippet;
-  };
+  var regex = (function() {
+    var matches = rules.map(function(item) {
+      return item.match.source;
+    }).join('|');
 
-  function bodyExists(body) {
+    return new RegExp(matches);
+  })();
+
+  function prepend(w) {
+    return snippet + w;
+  }
+
+  function append(w) {
+    return w + snippet;
+  }
+
+  function _html(str) {
+    return /<\!*[a-z][\s\S]*>/i.test(str);
+  }
+
+  function deal(body) {
+    return combined.test(body);
+  }
+
+  function exists(body) {
     if (!body) return false;
-    return (~body.lastIndexOf("</body>"));
+    return regex.test(body);
   }
 
-  function snippetExists(body) {
+  function snip(body) {
     if (!body) return true;
-    return (~body.lastIndexOf("/livereload.js?snipver=1"));
+    return (~body.lastIndexOf("/livereload.js"));
   }
 
-  function acceptsHtmlExplicit(req) {
-    var accept = req.headers["accept"];
-    if (!accept) return false;
-    return (~accept.indexOf("html"));
+  function snap(body) {
+    var _body = body;
+    rules.some(function(rule) {
+      if (rule.match.test(body)) {
+        _body = body.replace(rule.match, rule.fn);
+        return true;
+      }
+      return false;
+    })
+    return _body;
   }
 
-  function isExcluded(req) {
+  function accept(req) {
+    var ha = req.headers["accept"];
+    if (!ha) return false;
+    return (~ha.indexOf("html"));
+  }
+
+  function leave(req) {
     var url = req.url;
-    var excluded = false;
+    var ignored = false;
     if (!url) return true;
-    excludeList.forEach(function(exclude) {
-      if (~url.indexOf(exclude)) {
-        excluded = true;
+    ignore.forEach(function(item) {
+      if (~url.indexOf(item)) {
+        ignored = true;
       }
     });
-    return excluded;
+    return ignored;
   }
 
-  return function liveReload(req, res, next) {
+  return function livereload(req, res, next) {
     var writeHead = res.writeHead;
     var write = res.write;
     var end = res.end;
 
-    if (!acceptsHtmlExplicit(req) || isExcluded(req)) {
+    if (!accept(req) || leave(req)) {
       return next();
     }
 
@@ -58,13 +94,13 @@ module.exports = function liveReload(opt) {
     };
 
     res.inject = res.write = function(string, encoding) {
-      res.write = write;
       if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
-        if ((bodyExists(body) || bodyExists(res.data)) && !snippetExists(body) && (!res.data || !snippetExists(res.data))) {
-          res.push(body.replace(/<\/body>/, function(w) {
-            return getSnippet() + w;
-          }));
+        if (exists(body) && !snip(body)) {
+          res.push(snap(body));
+          return true;
+        } else if (html(body) || (res.data && html(res.data))) {
+          res.push(body);
           return true;
         } else {
           return res.write(string, encoding);

@@ -10,7 +10,7 @@ app.configure('development', function() {
   // live reload script  
   app.use(require('../index.js')({
     port: 35730,
-    //excludeList: []
+    ignore: ['.js']
   }));
 });
 
@@ -72,7 +72,7 @@ describe('GET /default-test', function(){
   })
 })
 
-describe('GET /default-test', function(){
+describe('GET /index.html', function(){
   it('respond with inserted script', function(done){
     request(app)
       .get('/index.html')
@@ -80,6 +80,20 @@ describe('GET /default-test', function(){
       .expect(200)
       .end(function(err, res){
         assert(hasScript(res.text));
+        assert(~res.text.indexOf(':35730/livereload.js'));
+        if (err) return done(err);
+        done()
+      });
+  })
+})
+
+describe('GET /large-file', function(){
+  it('respond with inserted script', function(done){
+    request(app)
+      .get('/large-file.html')
+      .set('Accept', 'text/html')
+      .expect(200)
+      .end(function(err, res){
         assert(~res.text.indexOf(':35730/livereload.js'));
         if (err) return done(err);
         done()
@@ -116,6 +130,46 @@ describe('GET /static.html', function(){
   })
 })
 
+
+describe('GET /favicon.ico', function(){
+  it('respond with script', function(done){
+    request(app)
+      .get('/favicon.ico')
+      .expect(200)
+      .end(function(err, res){
+        assert(!hasScript(res.text));
+        if (err) return done(err);
+        done()
+      });
+  })
+})
+
+describe('GET /font.ttf', function(){
+  it('respond with script', function(done){
+    request(app)
+      .get('/font.ttf')
+      .expect(200)
+      .end(function(err, res){
+        assert(!hasScript(res.text));
+        if (err) return done(err);
+        done()
+      });
+  })
+})
+
+describe('GET /static.html', function(){
+  it('respond with script', function(done){
+    request(app)
+      .get('/static.html')
+      .set('Accept', 'text/html')
+      .expect(200)
+      .end(function(err, res){
+        assert(hasScript(res.text));
+        if (err) return done(err);
+        done()
+      });
+  })
+})
 
 describe('GET /write', function(){
   it('respond with script', function(done){
