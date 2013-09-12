@@ -1,7 +1,7 @@
 module.exports = function livereload(opt) {
   // options
   var opt = opt || {};
-  var ignore = opt.ignore || opt.excludeList || ['.woff', '.js', '.css', '.ico'];
+  var ignore = opt.ignore || opt.excludeList || ['.js', '.css', '.svg', '.ico', '.woff', '.png', '.jpg', '.jpeg'];
   var html = opt.html || _html;
   var rules = opt.rules || [{
     match: /<\/body>/,
@@ -10,7 +10,7 @@ module.exports = function livereload(opt) {
     match: /<\/html>/,
     fn: prepend
   }, {
-    match: /\<\!DOCTYPE.+\>/,
+    match: /<\!DOCTYPE.+>/,
     fn: append
   }];
   var port = opt.port || 35729;
@@ -26,21 +26,17 @@ module.exports = function livereload(opt) {
     return new RegExp(matches);
   })();
 
-  function prepend(w) {
-    return snippet + w;
+  function prepend(w, s) {
+    return s + w;
   }
 
-  function append(w) {
-    return w + snippet;
+  function append(w, s) {
+    return w + s;
   }
 
   function _html(str) {
     if (!str) return false;
-    return /<\!*[a-z][\s\S]*>/i.test(str);
-  }
-
-  function deal(body) {
-    return combined.test(body);
+    return /<[:_-\w\s\!\/\=\"\']+>/i.test(str);
   }
 
   function exists(body) {
@@ -49,7 +45,7 @@ module.exports = function livereload(opt) {
   }
 
   function snip(body) {
-    if (!body) return true;
+    if (!body) return false;
     return (~body.lastIndexOf("/livereload.js"));
   }
 
@@ -57,7 +53,9 @@ module.exports = function livereload(opt) {
     var _body = body;
     rules.some(function(rule) {
       if (rule.match.test(body)) {
-        _body = body.replace(rule.match, rule.fn);
+        _body = body.replace(rule.match, function(w) {
+          return rule.fn(w, snippet);
+        });
         return true;
       }
       return false;
@@ -85,12 +83,21 @@ module.exports = function livereload(opt) {
 
   // middleware
   return function livereload(req, res, next) {
+    if (res._livereload) return next();
+    res._livereload = true;
+
     var writeHead = res.writeHead;
     var write = res.write;
     var end = res.end;
 
     if (!accept(req) || leave(req)) {
       return next();
+    }
+
+    function restore() {
+      res.writeHead = writeHead;
+      res.write = write;
+      res.end = end;
     }
 
     res.push = function(chunk) {
@@ -100,14 +107,15 @@ module.exports = function livereload(opt) {
     res.inject = res.write = function(string, encoding) {
       if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
-        if (exists(body) || exists(res.data) && !snip(body) && (!res.data || !snip(res.data))) {
+        if (exists(body) && !snip(res.data)) {
           res.push(snap(body));
           return true;
         } else if (html(body) || html(res.data)) {
           res.push(body);
           return true;
         } else {
-          return res.write(string, encoding);
+          restore();
+          return write.call(res, string, encoding);
         }
       }
       return true;
@@ -116,11 +124,9 @@ module.exports = function livereload(opt) {
     res.writeHead = function() {};
 
     res.end = function(string, encoding) {
-      res.writeHead = writeHead;
-      res.write = write;
-      res.end = end;
+      restore();
       var result = res.inject(string, encoding);
-      if (!result) return res.end(string, encoding);
+      if (!result) return end.call(res, string, encoding);
       if (res.data !== undefined && !res._header) res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
       res.end(res.data, encoding);
     };

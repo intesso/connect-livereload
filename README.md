@@ -26,12 +26,8 @@ If you need liveReload on static html files, then place it before the static rou
 
 ## connect/express example
 ```javascript
-  var port = 35729;
-  var ignore = ['.woff', '.flv'];
-
   app.use(require('connect-livereload')({
-    port: port,
-    ignore: ignore
+    port: 35729
   }));
 ```
 
@@ -45,7 +41,7 @@ e.g.:
 ```
   app.use(require('connect-livereload')({
     port: 35729,
-    ignore: []
+    ignore: ['.js', '.svg']
   }));
 
 ```
@@ -54,16 +50,17 @@ These are the available options with the following defaults:
 
 ```javascript
   // these files will be ignored
-  ignore: ['.woff', '.js', '.css', '.ico'],
+  ignore: ['.js', '.css', '.svg', '.ico', '.woff', '.png', '.jpg', '.jpeg'],
   
   // this function is used to determine if the content of `res.write` or `res.end` is html.
   html: function (str) {
-    return /<\!*[a-z][\s\S]*>/i.test(str);
+    return /<[:_-\w\s\!\/\=\"\']+>/i.test(str);
   },
   
   // rules are provided to find the place where the snippet should be inserted.
   // the main problem is that on the server side it can be tricky to determine if a string will be valid html on the client.
   // the function `fn` of the first `match` is executed like this `body.replace(rule.match, rule.fn);`
+  // the function `fn` has got the arguments `fn(w, s)` where `w` is the matches string and `s` is the snippet.
   rules: [{
     match: /<\/body>/,
     fn: prepend
@@ -71,7 +68,7 @@ These are the available options with the following defaults:
     match: /<\/html>/,
     fn: prepend
   }, {
-    match: /\<\!DOCTYPE.+\>/,
+    match: /<\!DOCTYPE.+>/,
     fn: append
   }],
 
