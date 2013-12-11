@@ -122,22 +122,14 @@ module.exports = function livereload(opt) {
     };
 
     res.writeHead = function() {
-      if (arguments[1]) {
-        var headers;
-        if (typeof arguments[1] === 'object') {
-          headers = arguments[1];
-        } else if (arguments[2] && typeof arguments[2] === 'object') {
-          headers = arguments[2];
-        }
-        if (headers) {
-          for (var name in Object.keys(headers)) {
-            if (/content-length/i.test(name)) {
-              delete headers[name];
-            }
+      var headers = arguments[arguments.length - 1];
+      if (headers && typeof headers === 'object') {
+        for (var name in headers) {
+          if (/content-length/i.test(name)) {
+            delete headers[name];
           }
         }
       }
-
       writeHead.apply(res, arguments);
     };
 
