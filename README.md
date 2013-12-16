@@ -122,7 +122,7 @@ An alternative would be to install the [LiveReload browser plugin](https://chrom
 
 credits
 =======
-* The middleware code is mainly extracted from: [grunt-contrib-livereload/util.js](https://github.com/gruntjs/grunt-contrib-livereload/blob/master/lib/utils.js)
+* The initial middleware code was mainly extracted from: [grunt-contrib-livereload/util.js](https://github.com/gruntjs/grunt-contrib-livereload/blob/master/lib/utils.js)
 * [LiveReload Creator](http://livereload.com/)
 
 tests
