@@ -130,6 +130,10 @@ module.exports = function livereload(opt) {
           }
         }
       }
+
+      var header = res.getHeader( 'content-length' );
+      if ( header ) res.removeHeader( 'content-length' );
+
       writeHead.apply(res, arguments);
     };
 
