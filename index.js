@@ -4,10 +4,10 @@ module.exports = function livereload(opt) {
   var ignore = opt.ignore || opt.excludeList || ['.js', '.css', '.svg', '.ico', '.woff', '.png', '.jpg', '.jpeg'];
   var html = opt.html || _html;
   var rules = opt.rules || [{
-    match: /<\/body>/,
+    match: /<\/body>(?![\s\S]*<\/body>)/,
     fn: prepend
   }, {
-    match: /<\/html>/,
+    match: /<\/html>(?![\s\S]*<\/html>)/,
     fn: prepend
   }, {
     match: /<\!DOCTYPE.+>/,
