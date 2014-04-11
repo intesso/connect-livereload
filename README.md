@@ -49,8 +49,13 @@ e.g.:
 These are the available options with the following defaults:
 
 ```javascript
-  // these files will be ignored
-  ignore: ['.js', '.css', '.svg', '.ico', '.woff', '.png', '.jpg', '.jpeg'],
+  // `ignore` and `include`: array with strings and regex expressions elements.
+  // strings: included/ignored when the url contains this string
+  // regex: any expression: e.g. starts with pattern: /^.../ ends with pattern: /...$/
+  ignore: [/\.js$/, /\.css$/, /\.svg$/, /\.ico$/, /\.woff$/, /\.png$/, /\.jpg$/, /\.jpeg$/],
+
+  // include all urls by default
+  include: [/.*/],
   
   // this function is used to determine if the content of `res.write` or `res.end` is html.
   html: function (str) {
@@ -62,10 +67,10 @@ These are the available options with the following defaults:
   // the function `fn` of the first `match` is executed like this `body.replace(rule.match, rule.fn);`
   // the function `fn` has got the arguments `fn(w, s)` where `w` is the matches string and `s` is the snippet.
   rules: [{
-    match: /<\/body>/,
+    match: /<\/body>(?![\s\S]*<\/body>)/,
     fn: prepend
   }, {
-    match: /<\/html>/,
+    match: /<\/html>(?![\s\S]*<\/html>)/,
     fn: prepend
   }, {
     match: /<\!DOCTYPE.+>/,

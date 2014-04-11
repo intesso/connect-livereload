@@ -1,7 +1,8 @@
 module.exports = function livereload(opt) {
   // options
   var opt = opt || {};
-  var ignore = opt.ignore || opt.excludeList || ['.js', '.css', '.svg', '.ico', '.woff', '.png', '.jpg', '.jpeg'];
+  var ignore = opt.ignore || opt.excludeList || [/\.js$/, /\.css$/, /\.svg$/, /\.ico$/, /\.woff$/, /\.png$/, /\.jpg$/, /\.jpeg$/];
+  var include = opt.include || [/.*/];
   var html = opt.html || _html;
   var rules = opt.rules || [{
     match: /<\/body>(?![\s\S]*<\/body>)/,
@@ -69,16 +70,12 @@ module.exports = function livereload(opt) {
     return (~ha.indexOf("html"));
   }
 
-  function leave(req) {
-    var url = req.url;
-    var ignored = false;
-    if (!url) return true;
-    ignore.forEach(function(item) {
-      if (~url.indexOf(item)) {
-        ignored = true;
-      }
+  function check(str, arr) {
+   if (!str) return true;
+    return arr.some(function(item) {
+      if ( (item.test && item.test(str) ) || ~str.indexOf(item)) return true;
+      return false;
     });
-    return ignored;
   }
 
   // middleware
@@ -90,7 +87,7 @@ module.exports = function livereload(opt) {
     var write = res.write;
     var end = res.end;
 
-    if (!accept(req) || leave(req)) {
+    if (!accept(req) || !check(req.url, include) || check(req.url, ignore)) {
       return next();
     }
 

@@ -1,9 +1,6 @@
 var express = require("express");
 var app = express();
 
-// load static content before routing takes place
-app.use(express["static"](__dirname + "/fixtures"));
-
 // load liveReload script only in development mode
 // load before app.router
 app.configure('development', function() {
@@ -14,6 +11,10 @@ app.configure('development', function() {
     ignore: []
   }));
 });
+
+
+// load static content before routing takes place
+app.use(express["static"](__dirname + "/fixtures"));
 
 // load the routes
 app.use(app.router);
