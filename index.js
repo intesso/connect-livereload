@@ -14,6 +14,7 @@ module.exports = function livereload(opt) {
     match: /<\!DOCTYPE.+>/,
     fn: append
   }];
+  var disableCompression = opt.disableCompression || false;
   var port = opt.port || 35729;
   var src = opt.src || "' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':" + port + "/livereload.js?snipver=1";
   var snippet = "\n<script type=\"text/javascript\">//<![CDATA[\ndocument.write('<script src=\"" + src + "\" type=\"text/javascript\"><\\/script>')\n//]]></script>\n";
@@ -89,6 +90,11 @@ module.exports = function livereload(opt) {
 
     if (!accept(req) || !check(req.url, include) || check(req.url, ignore)) {
       return next();
+    }
+
+    // Disable G-Zip to enable proper inspecting of HTML
+    if (disableCompression) {
+      req.headers['accept-encoding'] = 'identity';
     }
 
     function restore() {
