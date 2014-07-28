@@ -17,7 +17,7 @@ module.exports = function livereload(opt) {
   var disableCompression = opt.disableCompression || false;
   var port = opt.port || 35729;
   var src = opt.src || "' + (location.protocol || 'http:') + '//' + (location.hostname || 'localhost') + ':" + port + "/livereload.js?snipver=1";
-  var snippet = "\n<script type=\"text/javascript\">//<![CDATA[\ndocument.write('<script src=\"" + src + "\" type=\"text/javascript\"><\\/script>')\n//]]></script>\n";
+  var snippet = "\n<script>//<![CDATA[\ndocument.write('<script src=\"" + src + "\"><\\/script>')\n//]]></script>\n";
 
   // helper functions
   var regex = (function() {
