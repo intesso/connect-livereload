@@ -5,13 +5,13 @@ module.exports = function livereload(opt) {
   var include = opt.include || [/.*/];
   var html = opt.html || _html;
   var rules = opt.rules || [{
-    match: /<\/body>(?![\s\S]*<\/body>)/,
+    match: /<\/body>(?![\s\S]*<\/body>)/i,
     fn: prepend
   }, {
-    match: /<\/html>(?![\s\S]*<\/html>)/,
+    match: /<\/html>(?![\s\S]*<\/html>)/i,
     fn: prepend
   }, {
-    match: /<\!DOCTYPE.+>/,
+    match: /<\!DOCTYPE.+>/i,
     fn: append
   }];
   var disableCompression = opt.disableCompression || false;
