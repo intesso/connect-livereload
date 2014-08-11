@@ -16,7 +16,7 @@ use
 ===
 note: if you use this middleware, you should make sure to switch off the Browser LiveReload Extension if you have it installed.
 
-this middleware can be used with a LiveReload server e.g. [grunt-reload](https://github.com/webxl/grunt-reload) or [grunt-contrib-watch](https://github.com/gruntjs/grunt-contrib-watch).
+this middleware can be used with a LiveReload module e.g. [grunt-contrib-connect](https://github.com/gruntjs/grunt-contrib-connect) or [grunt-contrib-watch](https://github.com/gruntjs/grunt-contrib-watch).
 
 `connect-livereload` itself does not serve the `livereload.js` script.
 
