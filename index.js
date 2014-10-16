@@ -5,18 +5,19 @@ module.exports = function livereload(opt) {
   var include = opt.include || [/.*/];
   var html = opt.html || _html;
   var rules = opt.rules || [{
-    match: /<\/body>(?![\s\S]*<\/body>)/,
+    match: /<\/body>(?![\s\S]*<\/body>)/i,
     fn: prepend
   }, {
-    match: /<\/html>(?![\s\S]*<\/html>)/,
+    match: /<\/html>(?![\s\S]*<\/html>)/i,
     fn: prepend
   }, {
-    match: /<\!DOCTYPE.+>/,
+    match: /<\!DOCTYPE.+>/i,
     fn: append
   }];
   var disableCompression = opt.disableCompression || false;
+  var hostname = opt.hostname || 'localhost';
   var port = opt.port || 35729;
-  var src = opt.src || "//' + (location.hostname || 'localhost') + ':" + port + "/livereload.js?snipver=1";
+  var src = opt.src || "//' + (location.hostname || '" + hostname + "') + ':" + port + "/livereload.js?snipver=1";
   var snippet = "\n<script>//<![CDATA[\ndocument.write('<script src=\"" + src + "\"><\\/script>')\n//]]></script>\n";
 
   // helper functions
