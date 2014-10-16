@@ -1,7 +1,8 @@
 module.exports = function livereload(opt) {
   // options
   var opt = opt || {};
-  var ignore = opt.ignore || opt.excludeList || [/\.js$/, /\.css$/, /\.svg$/, /\.ico$/, /\.woff$/, /\.png$/, /\.jpg$/, /\.jpeg$/];
+  var ignore = opt.ignore || opt.excludeList || 
+    [/\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/, /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/];
   var include = opt.include || [/.*/];
   var html = opt.html || _html;
   var rules = opt.rules || [{
@@ -111,15 +112,15 @@ module.exports = function livereload(opt) {
     res.inject = res.write = function(string, encoding) {
       if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
+        // If this chunk must receive a snip, do so
         if (exists(body) && !snip(res.data)) {
           res.push(snap(body));
           return true;
-        } else if (html(body) || html(res.data)) {
+        }
+        // If in doubt, simply buffer the data for later inspection (on `end` function)
+        else {
           res.push(body);
           return true;
-        } else {
-          restore();
-          return write.call(res, string, encoding);
         }
       }
       return true;
@@ -142,9 +143,15 @@ module.exports = function livereload(opt) {
     };
 
     res.end = function(string, encoding) {
+      // If there are remaining bytes, save them as well
+      // Also, some implementations call "end" directly with all data.
+      res.inject(string);
       restore();
-      var result = res.inject(string, encoding);
-      if (!result) return end.call(res, string, encoding);
+      // Check if our body is HTML, and if it does not already have the snippet.
+      if (html(res.data) && exists(res.data) && !snip(res.data)) {
+        // Include, if necessary, replacing the entire res.data with the included snippet.
+        res.data = snap(res.data);
+      }
       if (res.data !== undefined && !res._header) res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
       res.end(res.data, encoding);
     };
