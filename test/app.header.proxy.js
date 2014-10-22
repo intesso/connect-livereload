@@ -4,7 +4,7 @@ var app = http.createServer(function (req, res) {
   var html = '<html><head></head><body><p>default test </p></body></html>';
 
   (require('../index.js')({
-    port: 35730, 
+    port: 35730,
     excludeList: ['.woff', '.js', '.css', '.ico']
   }))( req, res, function(){
 
@@ -21,11 +21,11 @@ var app = http.createServer(function (req, res) {
 // run the tests
 var request = require('supertest');
 var assert = require('assert');
- 
+
 function hasScript(html) {
   return (~html.indexOf('livereload.js?snipver=1'));
 }
- 
+
 
 describe('GET /default-test', function(){
   it('respond with inserted script', function(done){
@@ -56,8 +56,7 @@ describe('GET /default-test', function(){
     });
 
     req.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
-      assert( false );
+      assert(false, 'problem with request: ' + e.message);
     });
 
     req.end();

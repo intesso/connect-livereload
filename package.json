@@ -12,11 +12,15 @@
   "scripts": {
     "test": "mocha --reporter spec"
   },
-  "dependencies": {},
+  "dependencies": {
+    "isbinaryfile": "^2.0.1"
+  },
   "devDependencies": {
+    "buffer-equal": "0.0.1",
+    "cookie-session": "^1.0.2",
     "express": "~3.2.2",
-    "supertest": "~0.6.0",
-    "mocha": "~1.9.0"
+    "mocha": "~1.9.0",
+    "supertest": "~0.6.0"
   },
   "keywords": [
     "connect",

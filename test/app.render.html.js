@@ -7,7 +7,7 @@ app.use(express.methodOverride());
 
 // load liveReload script only in development mode
 app.configure('development', function() {
-  // live reload script 
+  // live reload script
   var livereload = require('../index.js');
   app.use(livereload({
     port: 35729,
@@ -60,6 +60,7 @@ describe('GET /dummies', function() {
       .set('Accept', 'text/html')
       .expect(200)
     .end(function(err, res) {
+      assert(res.text);
       assert.equal(res.text.match(/35729\/livereload.js/).length, 1);
       if (err) return done(err);
       done();
@@ -74,6 +75,7 @@ describe('GET /doctype', function() {
       .set('Accept', 'text/html')
       .expect(200)
     .end(function(err, res) {
+      assert(res.text);
       assert.equal(res.text.match(/35729\/livereload.js/).length, 1);
       if (err) return done(err);
       done();
@@ -88,6 +90,7 @@ describe('GET /html', function() {
       .set('Accept', 'text/html')
       .expect(200)
     .end(function(err, res) {
+      assert(res.text);
       assert.equal(res.text.match(/35729\/livereload.js/).length, 1);
       if (err) return done(err);
       done();

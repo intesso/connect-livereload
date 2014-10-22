@@ -1,3 +1,5 @@
+var isBinary = require('isbinaryfile');
+
 module.exports = function livereload(opt) {
   // options
   var opt = opt || {};
@@ -86,6 +88,7 @@ module.exports = function livereload(opt) {
     if (res._livereload) return next();
     res._livereload = true;
 
+    // store original functions
     var writeHead = res.writeHead;
     var write = res.write;
     var end = res.end;
@@ -99,28 +102,23 @@ module.exports = function livereload(opt) {
       req.headers['accept-encoding'] = 'identity';
     }
 
-    function restore() {
-      res.writeHead = writeHead;
-      res.write = write;
-      res.end = end;
-    }
-
-    res.push = function(chunk) {
-      res.data = (res.data || '') + chunk;
+    res.push = function(string) {
+      res.data = (res.data || '') + string;
     };
 
-    res.inject = res.write = function(string, encoding) {
-      if (string !== undefined) {
-        var body = string instanceof Buffer ? string.toString(encoding) : string;
-        // If this chunk must receive a snip, do so
-        if (exists(body) && !snip(res.data)) {
-          res.push(snap(body));
-          return true;
+    // proxy functions
+    res.inject = res.write = function(chunk, encoding) {
+      if (chunk && chunk.length) {
+        var buf = "string" == typeof chunk ? new Buffer(chunk, encoding) : chunk;
+        res._isBinary = res._isBinary || isBinary(buf, buf.length);
+        if (res._isBinary) {
+          return write.apply(res, arguments);
         }
-        // If in doubt, simply buffer the data for later inspection (on `end` function)
-        else {
-          res.push(body);
-          return true;
+        var string = chunk instanceof Buffer ? chunk.toString(encoding) : chunk;
+        if (exists(string) && !snip(res.data)) {
+          res.push(snap(string));
+        } else {
+          res.push(string);
         }
       }
       return true;
@@ -135,26 +133,21 @@ module.exports = function livereload(opt) {
           }
         }
       }
-
       var header = res.getHeader( 'content-length' );
       if ( header ) res.removeHeader( 'content-length' );
 
       writeHead.apply(res, arguments);
     };
 
-    res.end = function(string, encoding) {
-      // If there are remaining bytes, save them as well
-      // Also, some implementations call "end" directly with all data.
-      res.inject(string);
-      restore();
-      // Check if our body is HTML, and if it does not already have the snippet.
-      if (html(res.data) && exists(res.data) && !snip(res.data)) {
-        // Include, if necessary, replacing the entire res.data with the included snippet.
-        res.data = snap(res.data);
-      }
+    res.end = function(chunk, encoding) {
+      if (chunk && chunk.length && chunk.length > 0) res.inject(chunk, encoding);
+      if(res._isBinary) return end.apply(res, arguments);
+      if (html(res.data) && exists(res.data) && !snip(res.data)) res.data = snap(res.data);
       if (res.data !== undefined && !res._header) res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
-      res.end(res.data, encoding);
+
+      end.call(res, res.data, encoding);
     };
+
     next();
   };
 
