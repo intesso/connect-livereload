@@ -108,9 +108,9 @@ module.exports = function livereload(opt) {
 
     // proxy functions
     res.inject = res.write = function(chunk, encoding) {
-      if (chunk && chunk.length) {
+      if (chunk) {
         var buf = "string" == typeof chunk ? new Buffer(chunk, encoding) : chunk;
-        res._isBinary = res._isBinary || isBinary(buf, buf.length);
+        res._isBinary = typeof res._isBinary == 'undefined' ? isBinary(buf, buf.length) : res._isBinary;
         if (res._isBinary) {
           return write.apply(res, arguments);
         }
@@ -141,7 +141,7 @@ module.exports = function livereload(opt) {
 
     res.end = function(chunk, encoding) {
       if (chunk && chunk.length && chunk.length > 0) res.inject(chunk, encoding);
-      if(res._isBinary) return end.apply(res, arguments);
+      if (res._isBinary) return end.apply(res, arguments);
       if (html(res.data) && exists(res.data) && !snip(res.data)) res.data = snap(res.data);
       if (res.data !== undefined && !res._header) res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
 
