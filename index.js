@@ -14,7 +14,7 @@ module.exports = function livereload(opt) {
     match: /<\/html>(?![\s\S]*<\/html>)/i,
     fn: prepend
   }, {
-    match: /<\!DOCTYPE.+>/i,
+    match: /<\!DOCTYPE.+?>/i,
     fn: append
   }];
   var disableCompression = opt.disableCompression || false;
