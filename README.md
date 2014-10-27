@@ -73,7 +73,7 @@ These are the available options with the following defaults:
     match: /<\/html>(?![\s\S]*<\/html>)/i,
     fn: prepend
   }, {
-    match: /<\!DOCTYPE.+>/i,
+    match: /<\!DOCTYPE.+?>/i,
     fn: append
   }],
 
