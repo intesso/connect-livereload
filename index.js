@@ -4,8 +4,8 @@ module.exports = function livereload(opt) {
   var ignore = opt.ignore || opt.excludeList || [/\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/,
     /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/, /\.gif(\?.*)?$/, /\.pdf(\?.*)?$/,
     /\.json(\?.*)?$/
-  ];  
-  
+  ];
+
   var include = opt.include || [/.*/];
   var html = opt.html || _html;
   var rules = opt.rules || [{
@@ -21,8 +21,8 @@ module.exports = function livereload(opt) {
   var disableCompression = opt.disableCompression || false;
   var hostname = opt.hostname || 'localhost';
   var port = opt.port || 35729;
-  var src = opt.src || "//' + (location.hostname || '" + hostname + "') + ':" + port + "/livereload.js?snipver=1";
-  var snippet = "\n<script>//<![CDATA[\ndocument.write('<script src=\"" + src + "\"><\\/script>')\n//]]></script>\n";
+  var src = opt.src || '//' + hostname + ':' + port + '/livereload.js?snipver=1';
+  var snippet = '<script src="' + src + '" async defer></script>';
 
   // helper functions
   var regex = (function () {
