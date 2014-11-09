@@ -1,7 +1,7 @@
 module.exports = function livereload(opt) {
   // options
   var opt = opt || {};
-  var ignore = opt.ignore || opt.excludeList || 
+  var ignore = opt.ignore || opt.excludeList ||
     [/\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/, /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/];
   var include = opt.include || [/.*/];
   var html = opt.html || _html;
@@ -12,7 +12,7 @@ module.exports = function livereload(opt) {
     match: /<\/html>(?![\s\S]*<\/html>)/i,
     fn: prepend
   }, {
-    match: /<\!DOCTYPE.+>/i,
+    match: /<\!DOCTYPE.+?>/i,
     fn: append
   }];
   var disableCompression = opt.disableCompression || false;
@@ -27,7 +27,7 @@ module.exports = function livereload(opt) {
       return item.match.source;
     }).join('|');
 
-    return new RegExp(matches);
+    return new RegExp(matches, 'i');
   })();
 
   function prepend(w, s) {

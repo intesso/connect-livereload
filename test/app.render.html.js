@@ -22,7 +22,7 @@ app.use(express["static"](__dirname + "/fixtures"));
 app.use(app.router);
 
 app.get("/dummies", function(req, res) {
-  var html = '<!DOCTYPE html> html5 for dummies';
+  var html = '<!doctype html> html5 for dummies';
   res.send(html);
 });
 
