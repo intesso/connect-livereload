@@ -6,7 +6,7 @@ describe('app.options.include', function() {
   // load liveReload script only in development mode
   // load before app.router
   app.configure('development', function() {
-    // live reload script  
+    // live reload script
     app.use(require('../index.js')({
       include: [/^\/client/, 'file'],
       ignore: ['large', /\.js$/]
@@ -17,7 +17,7 @@ describe('app.options.include', function() {
   app.use(app.router);
 
   // load static content before routing takes place
-  app.use(express["static"](__dirname + "/fixtures"));
+  app.use(express.static(__dirname + "/fixtures"));
 
   app.get("/default-test", function(req, res) {
     var html = '<html><head></head><body><p>default test </p></body></html>';
@@ -48,10 +48,10 @@ describe('app.options.include', function() {
         .end(function(err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
-          done()
+          done();
         });
-    })
-  })
+    });
+  });
 
   describe('GET /static.html', function() {
     it('respond without script', function(done) {
@@ -62,11 +62,10 @@ describe('app.options.include', function() {
         .end(function(err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
-          done()
+          done();
         });
-    })
-  })
-
+    });
+  });
 
   describe('GET /client.html', function() {
     it('respond with inserted script', function(done) {
@@ -77,10 +76,10 @@ describe('app.options.include', function() {
         .end(function(err, res) {
           assert(hasScript(res.text));
           if (err) return done(err);
-          done()
+          done();
         });
-    })
-  })
+    });
+  });
 
   describe('GET /client.html.js', function() {
     it('respond without script', function(done) {
@@ -91,10 +90,10 @@ describe('app.options.include', function() {
         .end(function(err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
-          done()
+          done();
         });
-    })
-  })
+    });
+  });
 
   describe('GET /xl-file.html', function() {
     it('respond with inserted script', function(done) {
@@ -105,10 +104,10 @@ describe('app.options.include', function() {
         .end(function(err, res) {
           assert(hasScript(res.text));
           if (err) return done(err);
-          done()
+          done();
         });
-    })
-  })
+    });
+  });
 
   describe('GET /large-file.html', function() {
     it('respond without script', function(done) {
@@ -119,9 +118,8 @@ describe('app.options.include', function() {
         .end(function(err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
-          done()
+          done();
         });
-    })
+    });
   });
-
 });
