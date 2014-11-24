@@ -161,8 +161,9 @@ module.exports = function livereload(opt) {
         res.data = snap(res.data);
       }
       if (res.data !== undefined && !res._header) res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
-      res.end(res.data, encoding);
+      end.call(res, res.data, encoding);
     };
+
     next();
   };
 
