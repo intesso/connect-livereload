@@ -5,9 +5,13 @@ var fs = require('fs');
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 
+function hasScript(html) {
+  return ~html.indexOf('livereload.js?snipver=1');
+}
+
 // load liveReload script only in development mode
 app.configure('development', function() {
-  // live reload script 
+  // live reload script
   var livereload = require('../index.js');
   app.use(livereload({
     port: 35729,
@@ -16,13 +20,13 @@ app.configure('development', function() {
 });
 
 // load static content before routing takes place
-app.use(express["static"](__dirname + "/fixtures"));
+app.use(express.static(__dirname + "/fixtures"));
 
 // load the routes
 app.use(app.router);
 
 app.get("/dummies", function(req, res) {
-  var html = '<!DOCTYPE html> html5 for dummies';
+  var html = '<!doctype html> html5 for dummies';
   res.send(html);
 });
 
@@ -40,7 +44,6 @@ app.get("/head", function(req, res) {
   var html = '<head><title>without body </title></head>';
   res.send(html);
 });
-
 
 // start the server
 if (!module.parent) {
@@ -60,12 +63,12 @@ describe('GET /dummies', function() {
       .set('Accept', 'text/html')
       .expect(200)
     .end(function(err, res) {
-      assert.equal(res.text.match(/35729\/livereload.js/).length, 1);
+      assert(hasScript(res.text));
       if (err) return done(err);
       done();
     });
-  })
-})
+  });
+});
 
 describe('GET /doctype', function() {
   it('respond with inserted script', function(done) {
@@ -74,12 +77,12 @@ describe('GET /doctype', function() {
       .set('Accept', 'text/html')
       .expect(200)
     .end(function(err, res) {
-      assert.equal(res.text.match(/35729\/livereload.js/).length, 1);
+      assert(hasScript(res.text));
       if (err) return done(err);
       done();
     });
-  })
-})
+  });
+});
 
 describe('GET /html', function() {
   it('respond with inserted script', function(done) {
@@ -88,12 +91,12 @@ describe('GET /html', function() {
       .set('Accept', 'text/html')
       .expect(200)
     .end(function(err, res) {
-      assert.equal(res.text.match(/35729\/livereload.js/).length, 1);
+      assert(hasScript(res.text));
       if (err) return done(err);
       done();
     });
-  })
-})
+  });
+});
 
 describe('GET /head', function() {
   it('not have the script inserted', function(done) {
@@ -102,9 +105,9 @@ describe('GET /head', function() {
       .set('Accept', 'text/html')
       .expect(200)
     .end(function(err, res) {
-      assert.equal(res.text.indexOf('livereload.js'), -1);
+      assert(!hasScript(res.text));
       if (err) return done(err);
       done();
     });
-  })
-})
+  });
+});

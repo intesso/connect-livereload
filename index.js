@@ -1,8 +1,10 @@
 module.exports = function livereload(opt) {
   // options
   var opt = opt || {};
-  var ignore = opt.ignore || opt.excludeList || 
-    [/\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/, /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/];
+  var ignore = opt.ignore || opt.excludeList || [/\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/,
+    /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/, /\.gif(\?.*)?$/, /\.pdf(\?.*)?$/
+  ];
+
   var include = opt.include || [/.*/];
   var html = opt.html || _html;
   var rules = opt.rules || [{
@@ -27,7 +29,7 @@ module.exports = function livereload(opt) {
       return item.match.source;
     }).join('|');
 
-    return new RegExp(matches);
+    return new RegExp(matches, 'i');
   })();
 
   function prepend(w, s) {
@@ -74,9 +76,9 @@ module.exports = function livereload(opt) {
   }
 
   function check(str, arr) {
-   if (!str) return true;
+    if (!str) return true;
     return arr.some(function(item) {
-      if ( (item.test && item.test(str) ) || ~str.indexOf(item)) return true;
+      if ((item.test && item.test(str)) || ~str.indexOf(item)) return true;
       return false;
     });
   }
@@ -136,8 +138,8 @@ module.exports = function livereload(opt) {
         }
       }
 
-      var header = res.getHeader( 'content-length' );
-      if ( header ) res.removeHeader( 'content-length' );
+      var header = res.getHeader('content-length');
+      if (header) res.removeHeader('content-length');
 
       writeHead.apply(res, arguments);
     };
