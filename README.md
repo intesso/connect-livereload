@@ -52,13 +52,17 @@ These are the available options with the following defaults:
   // `ignore` and `include`: array with strings and regex expressions elements.
   // strings: included/ignored when the url contains this string
   // regex: any expression: e.g. starts with pattern: /^.../ ends with pattern: /...$/
-  ignore: [/\.js$/, /\.css$/, /\.svg$/, /\.ico$/, /\.woff$/, /\.png$/, /\.jpg$/, /\.jpeg$/],
+  ignore: [
+    /\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/, /\.woff(\?.*)?$/,
+    /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/, /\.gif(\?.*)?$/, /\.pdf(\?.*)?$/
+  ],
 
   // include all urls by default
   include: [/.*/],
 
   // this function is used to determine if the content of `res.write` or `res.end` is html.
   html: function (str) {
+    if (!str) return false;
     return /<[:_-\w\s\!\/\=\"\']+>/i.test(str);
   },
 
