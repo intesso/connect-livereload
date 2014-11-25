@@ -55,7 +55,7 @@ var request = require('supertest');
 var assert = require('assert');
 
 function hasScript(html) {
-  return (~html.indexOf('livereload.js?snipver=1'));
+  return (html && ~html.indexOf('livereload.js?snipver=1'));
 }
 
 describe('GET /default-test', function() {
