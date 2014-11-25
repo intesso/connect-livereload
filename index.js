@@ -86,11 +86,6 @@ module.exports = function livereload(opt) {
     if (res._livereload) return next();
     res._livereload = true;
 
-    var runPatches = true;
-    var writeHead = res.writeHead;
-    var write = res.write;
-    var end = res.end;
-
     if (!accept(req) || !check(req.url, include) || check(req.url, ignore)) {
       return next();
     }
@@ -100,17 +95,17 @@ module.exports = function livereload(opt) {
       req.headers['accept-encoding'] = 'identity';
     }
 
-    function restore() {
-      runPatches = false;
-    }
+    var runPatches = true;
+    var writeHead = res.writeHead;
+    var write = res.write;
+    var end = res.end;
 
     res.push = function(chunk) {
       res.data = (res.data || '') + chunk;
     };
 
     res.inject = res.write = function(string, encoding) {
-      if(!runPatches)
-        return write.call(res, string, encoding);
+      if(!runPatches) return write.call(res, string, encoding);
 
       if (string !== undefined) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
@@ -129,11 +124,10 @@ module.exports = function livereload(opt) {
     };
 
     res.writeHead = function() {
-      if(!runPatches)
-        return writeHead.apply(res, arguments);
+      if(!runPatches) return writeHead.apply(res, arguments);
 
       var headers = arguments[arguments.length - 1];
-      if (headers && typeof headers === 'object') {
+      if (typeof headers === 'object') {
         for (var name in headers) {
           if (/content-length/i.test(name)) {
             delete headers[name];
@@ -141,20 +135,18 @@ module.exports = function livereload(opt) {
         }
       }
 
-      var header = res.getHeader( 'content-length' );
-      if ( header ) res.removeHeader( 'content-length' );
+      if (res.getHeader('content-length')) res.removeHeader( 'content-length' );
 
       writeHead.apply(res, arguments);
     };
 
     res.end = function(string, encoding) {
-      if(!runPatches)
-        return end.call(res, string, encoding);
+      if(!runPatches) return end.call(res, string, encoding);
 
       // If there are remaining bytes, save them as well
       // Also, some implementations call "end" directly with all data.
       res.inject(string);
-      restore();
+      runPatches = false;
       // Check if our body is HTML, and if it does not already have the snippet.
       if (html(res.data) && exists(res.data) && !snip(res.data)) {
         // Include, if necessary, replacing the entire res.data with the included snippet.
@@ -167,4 +159,4 @@ module.exports = function livereload(opt) {
     next();
   };
 
-}
+};
