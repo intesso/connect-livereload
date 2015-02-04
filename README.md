@@ -6,6 +6,8 @@ if you are happy with a browser plugin, then you don't need this middleware.
 
 [![Build Status](https://travis-ci.org/intesso/connect-livereload.png)](https://travis-ci.org/intesso/connect-livereload)
 [![NPM version](https://badge.fury.io/js/connect-livereload.png)](http://badge.fury.io/js/connect-livereload)
+
+
 install
 =======
 ```bash
