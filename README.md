@@ -1,11 +1,15 @@
+
 connect-livereload
 ==================
 connect middleware for adding the livereload script to the response.
 no browser plugin is needed.
 if you are happy with a browser plugin, then you don't need this middleware.
 
+[![NPM](https://nodei.co/npm/connect-livereload.png?downloads=true&downloadRank=true)](https://nodei.co/npm-dl/connect-livereload/)
+
+
 [![Build Status](https://travis-ci.org/intesso/connect-livereload.png)](https://travis-ci.org/intesso/connect-livereload)
-[![NPM version](https://badge.fury.io/js/connect-livereload.png)](http://badge.fury.io/js/connect-livereload)
+[![Coverage Status](https://coveralls.io/repos/intesso/connect-livereload/badge.svg)](https://coveralls.io/r/intesso/connect-livereload)
 
 
 install
