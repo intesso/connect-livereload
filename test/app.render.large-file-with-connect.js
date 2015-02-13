@@ -1,5 +1,6 @@
-var express = require("express");
-var app = express();
+var connect = require('connect');
+var serveStatic = require('serve-static');
+var app = connect();
 var fs = require('fs');
 
 // load liveReload script
@@ -9,14 +10,14 @@ app.use(require('../index.js')({
 }));
 
 // load static content before routing takes place
-app.use(express["static"](__dirname + "/fixtures"));
+app.use(serveStatic(__dirname + "/fixtures"));
 
-app.get("/stream-large-file", function (req, res) {
+app.use("/stream-large-file", function (req, res) {
   var stream = fs.createReadStream(__dirname + '/fixtures/large-file.html');
   stream.pipe(res);
 });
 
-app.get("/stream-xl-file", function (req, res) {
+app.use("/stream-xl-file", function (req, res) {
   var stream = fs.createReadStream(__dirname + '/fixtures/xl-file.html');
   stream.pipe(res);
 });

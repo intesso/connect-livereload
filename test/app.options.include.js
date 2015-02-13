@@ -1,25 +1,18 @@
-describe('app.options.include', function() {
+describe('app.options.include', function () {
 
   var express = require("express");
   var app = express();
 
-  // load liveReload script only in development mode
-  // load before app.router
-  app.configure('development', function() {
-    // live reload script
-    app.use(require('../index.js')({
-      include: [/^\/client/, 'file'],
-      ignore: ['large', /\.js$/]
-    }));
-  });
-
-  // load the routes
-  app.use(app.router);
+  // load liveReload script
+  app.use(require('../index.js')({
+    include: [/^\/client/, 'file'],
+    ignore: ['large', /\.js$/]
+  }));
 
   // load static content before routing takes place
   app.use(express.static(__dirname + "/fixtures"));
 
-  app.get("/default-test", function(req, res) {
+  app.get("/default-test", function (req, res) {
     var html = '<html><head></head><body><p>default test </p></body></html>';
     res.send(html);
   });
@@ -39,13 +32,13 @@ describe('app.options.include', function() {
     return (~html.indexOf('livereload.js?snipver=1'));
   }
 
-  describe('GET /default-test', function() {
-    it('respond without script', function(done) {
+  describe('GET /default-test', function () {
+    it('respond without script', function (done) {
       request(app)
         .get('/default-test')
         .set('Accept', 'text/html')
         .expect(200)
-        .end(function(err, res) {
+        .end(function (err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
           done();
@@ -53,13 +46,13 @@ describe('app.options.include', function() {
     });
   });
 
-  describe('GET /static.html', function() {
-    it('respond without script', function(done) {
+  describe('GET /static.html', function () {
+    it('respond without script', function (done) {
       request(app)
         .get('/static.html')
         .set('Accept', 'text/html')
         .expect(200)
-        .end(function(err, res) {
+        .end(function (err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
           done();
@@ -67,13 +60,13 @@ describe('app.options.include', function() {
     });
   });
 
-  describe('GET /client.html', function() {
-    it('respond with inserted script', function(done) {
+  describe('GET /client.html', function () {
+    it('respond with inserted script', function (done) {
       request(app)
         .get('/client.html')
         .set('Accept', 'text/html')
         .expect(200)
-        .end(function(err, res) {
+        .end(function (err, res) {
           assert(hasScript(res.text));
           if (err) return done(err);
           done();
@@ -81,13 +74,13 @@ describe('app.options.include', function() {
     });
   });
 
-  describe('GET /client.html.js', function() {
-    it('respond without script', function(done) {
+  describe('GET /client.html.js', function () {
+    it('respond without script', function (done) {
       request(app)
         .get('/client.html.js')
         .set('Accept', 'text/html')
         .expect(200)
-        .end(function(err, res) {
+        .end(function (err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
           done();
@@ -95,13 +88,13 @@ describe('app.options.include', function() {
     });
   });
 
-  describe('GET /xl-file.html', function() {
-    it('respond with inserted script', function(done) {
+  describe('GET /xl-file.html', function () {
+    it('respond with inserted script', function (done) {
       request(app)
         .get('/xl-file.html')
         .set('Accept', 'text/html')
         .expect(200)
-        .end(function(err, res) {
+        .end(function (err, res) {
           assert(hasScript(res.text));
           if (err) return done(err);
           done();
@@ -109,13 +102,13 @@ describe('app.options.include', function() {
     });
   });
 
-  describe('GET /large-file.html', function() {
-    it('respond without script', function(done) {
+  describe('GET /large-file.html', function () {
+    it('respond without script', function (done) {
       request(app)
         .get('/large-file.html')
         .set('Accept', 'text/html')
         .expect(200)
-        .end(function(err, res) {
+        .end(function (err, res) {
           assert(!hasScript(res.text));
           if (err) return done(err);
           done();

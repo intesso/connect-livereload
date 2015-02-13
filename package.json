@@ -1,7 +1,7 @@
 {
   "name": "connect-livereload",
   "description": "connect middleware for adding the livereload script to the response",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "author": "Andi Neck <andi.neck@intesso.com>",
   "contributors": [
     {
@@ -14,9 +14,11 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "express": "~3.2.2",
-    "supertest": "~0.15.0",
-    "mocha": "~1.9.0"
+    "connect": "^3.3.4",
+    "express": "~4.11.2",
+    "mocha": "~2.1.0",
+    "serve-static": "^1.8.1",
+    "supertest": "~0.15.0"
   },
   "keywords": [
     "connect",
