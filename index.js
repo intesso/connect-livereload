@@ -19,10 +19,12 @@ module.exports = function livereload(opt) {
       fn: append
     }];
   var disableCompression = opt.disableCompression || false;
-  var hostname = opt.hostname || 'localhost';
   var port = opt.port || 35729;
-  var src = opt.src || '//' + hostname + ':' + port + '/livereload.js?snipver=1';
-  var snippet = '<script src="' + src + '" async defer></script>';
+
+  function snippet(host) {
+    var src = '//' + host + ':' + port + '/livereload.js?snipver=1';
+    return '<script src="' + src + '" async="" defer=""></script>';
+  }
 
   // helper functions
   var regex = (function () {
@@ -56,12 +58,12 @@ module.exports = function livereload(opt) {
     return (~body.lastIndexOf("/livereload.js"));
   }
 
-  function snap(body) {
+  function snap(body, host) {
     var _body = body;
     rules.some(function (rule) {
       if (rule.match.test(body)) {
-        _body = body.replace(rule.match, function (w) {
-          return rule.fn(w, snippet);
+        _body = body.replace(rule.match, function(w) {
+          return rule.fn(w, snippet(host));
         });
         return true;
       }
@@ -86,6 +88,8 @@ module.exports = function livereload(opt) {
 
   // middleware
   return function livereload(req, res, next) {
+    var host = opt.hostname || req.headers.host.split(':')[0];
+
     if (res._livereload) return next();
     res._livereload = true;
 
@@ -114,7 +118,7 @@ module.exports = function livereload(opt) {
         var body = string instanceof Buffer ? string.toString(encoding) : string;
         // If this chunk must receive a snip, do so
         if (exists(body) && !snip(res.data)) {
-          res.push(snap(body));
+          res.push(snap(body, host));
           return true;
         }
         // If in doubt, simply buffer the data for later inspection (on `end` function)
@@ -153,7 +157,7 @@ module.exports = function livereload(opt) {
       // Check if our body is HTML, and if it does not already have the snippet.
       if (html(res.data) && exists(res.data) && !snip(res.data)) {
         // Include, if necessary, replacing the entire res.data with the included snippet.
-        res.data = snap(res.data);
+        res.data = snap(res.data, host);
       }
       if (res.data !== undefined && !res._header) res.setHeader('content-length', Buffer.byteLength(res.data, encoding));
       end.call(res, res.data, encoding);
