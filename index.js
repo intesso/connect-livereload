@@ -2,9 +2,10 @@ module.exports = function livereload(opt) {
   // options
   var opt = opt || {};
   var ignore = opt.ignore || opt.excludeList || [/\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/,
-      /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/, /\.gif(\?.*)?$/, /\.pdf(\?.*)?$/
-    ];
-
+    /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/, /\.gif(\?.*)?$/, /\.pdf(\?.*)?$/,
+    /\.json(\?.*)?$/
+  ];  
+  
   var include = opt.include || [/.*/];
   var html = opt.html || _html;
   var rules = opt.rules || [{
