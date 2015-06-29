@@ -27,6 +27,7 @@
   ],
   "repository": "git://github.com/intesso/connect-livereload",
   "main": "index",
+  "license": "MIT",
   "engines": {
     "node": "*"
   }
