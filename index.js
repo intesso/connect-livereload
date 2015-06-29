@@ -1,6 +1,6 @@
 module.exports = function livereload(opt) {
   // options
-  var opt = opt || {};
+  opt = opt || {};
   var ignore = opt.ignore || opt.excludeList || [/\.js(\?.*)?$/, /\.css(\?.*)?$/, /\.svg(\?.*)?$/, /\.ico(\?.*)?$/,
     /\.woff(\?.*)?$/, /\.png(\?.*)?$/, /\.jpg(\?.*)?$/, /\.jpeg(\?.*)?$/, /\.gif(\?.*)?$/, /\.pdf(\?.*)?$/,
     /\.json(\?.*)?$/
@@ -22,7 +22,7 @@ module.exports = function livereload(opt) {
   var port = opt.port || 35729;
 
   function snippet(host) {
-    var src = '//' + host + ':' + port + '/livereload.js?snipver=1';
+    var src = opt.src || '//' + host + ':' + port + '/livereload.js?snipver=1';
     return '<script src="' + src + '" async="" defer=""></script>';
   }
 
