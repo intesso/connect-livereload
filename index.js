@@ -152,7 +152,7 @@ module.exports = function livereload(opt) {
 
       // If there are remaining bytes, save them as well
       // Also, some implementations call "end" directly with all data.
-      res.inject(string);
+      res.inject(string, encoding);
       runPatches = false;
       // Check if our body is HTML, and if it does not already have the snippet.
       if (html(res.data) && exists(res.data) && !snip(res.data)) {
