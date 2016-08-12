@@ -95,6 +95,14 @@ These are the available options with the following defaults:
 
   // Set this option to `true` to set `req.headers['accept-encoding']` to 'identity' (disabling compression)
   disableCompression: false,
+
+  // Locations where livereload plugins are provided (not by connect-livereload).
+  // These plugins should handle being loaded before _or_ after the livereload
+  // script itself (the order is not guaranteed), like
+  // https://github.com/mixmaxhq/livereload-require-js-includes/blob/5a431793d6fdfcf93d66814ddc58338515a3254f/index.js#L40-L45
+  plugins: [
+    "http://localhost:3001/livereload-require-js-includes/index.js"
+  ]
 ```
 
 please see the [examples](https://github.com/intesso/connect-livereload/tree/master/examples) for the app and Grunt configuration.
