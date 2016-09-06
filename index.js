@@ -24,10 +24,9 @@ module.exports = function livereload(opt) {
 
   function snippet(host) {
     var src = opt.src || '//' + host + ':' + port + '/livereload.js?snipver=1';
-    return '<script src="' + src + '" async="" defer=""></script>' +
-      plugins.map(function(pluginSrc) {
-        return '<script src="' + pluginSrc + '" async="" defer=""></script>';
-      }).join('');
+    return [src].concat(plugins).map(function(source) {
+      return '<script src="' + source + '" async="" defer=""></script>';
+    }).join('');
   }
 
   // helper functions
