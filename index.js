@@ -20,10 +20,13 @@ module.exports = function livereload(opt) {
     }];
   var disableCompression = opt.disableCompression || false;
   var port = opt.port || 35729;
+  var plugins = opt.plugins || [];
 
   function snippet(host) {
     var src = opt.src || '//' + host + ':' + port + '/livereload.js?snipver=1';
-    return '<script src="' + src + '" async="" defer=""></script>';
+    return [src].concat(plugins).map(function(source) {
+      return '<script src="' + source + '" async="" defer=""></script>';
+    }).join('');
   }
 
   // helper functions
