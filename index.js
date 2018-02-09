@@ -91,7 +91,8 @@ module.exports = function livereload(opt) {
 
   // middleware
   return function livereload(req, res, next) {
-    var host = opt.hostname || req.headers.host.split(':')[0];
+    var hostName = req.headers[':authority'] || req.headers.host;
+    var host = opt.hostname || hostName.split(':')[0];
 
     if (res._livereload) return next();
     res._livereload = true;
